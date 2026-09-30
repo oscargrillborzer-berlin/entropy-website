@@ -19,6 +19,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+      pages: read     # configure-pages looks up the Pages settings
     steps:
       # Actions are pinned to a commit, not to a tag that could be moved. Dependabot keeps them current.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
