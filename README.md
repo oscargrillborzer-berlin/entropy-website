@@ -2,7 +2,7 @@
 
 Die Website von Entropy: Red Teaming für LLM-Anwendungen, Englisch und Deutsch.
 
-**Live-Vorschau:** __PAGES_URL__
+**Live-Vorschau:** https://oscargrillborzer-berlin.github.io/entropy-website/
 
 Die Seite ist eine einzige, eigenständige HTML-Datei. Schriften, Fotos und Code sind eingebettet, sie lädt nichts von fremden Servern, setzt keine Cookies und trackt nicht. Eine strenge Content Security Policy lässt nur genau den eigenen Code laufen.
 
