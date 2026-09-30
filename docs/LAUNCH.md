@@ -1,121 +1,121 @@
-# Website live schalten
+# Taking the website live
 
-Diese Anleitung bringt die Seite auf eure eigene Domain. Sie braucht keine Programmierkenntnisse.
+This guide puts the site on your own domain. No programming knowledge needed.
 
-**Welcher Weg?**
+**Which way?**
 
-- **Weg A: Netlify** (empfohlen, kostenlos). Das Anfrageformular funktioniert, jede Änderung auf GitHub geht automatisch live, und die Sicherheits-Header werden gesetzt. Etwa 20 Minuten.
-- **Weg B: Dateien bei eurem bestehenden Hoster hochladen** (IONOS, Strato, All-Inkl …). Das geht, wenn die Domain dort schon Webspace hat. Das Formular sendet dann aber nichts.
-- **Ihr habt Wix, Squarespace, Jimdo oder einen anderen Baukasten?** Dort lässt sich diese Seite nicht einbauen. Nehmt Weg A und verbindet eure Domain mit Netlify (A5).
-
----
-
-## Vorbereitung: Zugang zu GitHub
-
-Das Repository gehört gerade Oscars GitHub-Konto. Für eine Firma sauberer ist eine **GitHub-Organisation**, in der alle Gründer Admin sind. Das ist kostenlos:
-
-1. **Oscar:** Auf github.com oben rechts auf das Profilbild → **Your organizations** → **New organization** → Plan **Free**. Einen Namen wählen, zum Beispiel `entropy-security`.
-2. **Oscar:** Im Repository **Settings** → ganz unten **Transfer ownership** → die neue Organisation wählen. Links, Commits und Einstellungen bleiben erhalten.
-3. **Oscar:** In der Organisation **People** → **Invite member** → Natalies GitHub-Name oder E-Mail → Rolle **Owner**.
-4. **Natalie:** Falls noch nicht vorhanden, auf github.com ein Konto anlegen. Dann die Einladung aus der E-Mail annehmen.
-
-Ohne Organisation geht es auch: Im Repository **Settings → Collaborators → Add people** Natalie einladen. Dann muss aber Oscar den Netlify-Schritt A2 machen, weil nur der Eigentümer Netlify den Zugriff erlauben kann.
-
-Nach einem Umzug in eine Organisation ändert sich die Adresse der Live-Vorschau zu `https://<organisation>.github.io/entropy-website/`. Tragt sie in der `README.md` ein.
+- **Way A: Netlify** (recommended, free). The request form works, every change on GitHub goes live automatically, and the security headers are set. About 20 minutes.
+- **Way B: upload the files to your existing host** (IONOS, Strato, All-Inkl …). Works if the domain already has web space there, but the request form won’t send anything.
+- **Using Wix, Squarespace, Jimdo or another site builder?** This site can’t be embedded there. Use Way A and connect your domain to Netlify (A5).
 
 ---
 
-## Weg A: Netlify
+## Preparation: access to GitHub
 
-Netlify benennt Menüpunkte ab und zu um. Wenn ein Name nicht genau passt, heißt er sinngemäß so.
+The repository currently belongs to Oscar’s GitHub account. For a company, a **GitHub organization** in which every founder is an admin is cleaner. It’s free:
 
-### A1. Konto anlegen
+1. **Oscar:** On github.com, profile picture (top right) → **Your organizations** → **New organization** → plan **Free**. Pick a name, for example `entropy-security`.
+2. **Oscar:** In the repository, **Settings** → at the very bottom **Transfer ownership** → choose the new organization. Links, commits and settings are kept.
+3. **Oscar:** In the organization, **People** → **Invite member** → Natalie’s GitHub username or email → role **Owner**.
+4. **Natalie:** Create a GitHub account if you don’t have one yet, then accept the invitation from the email.
 
-1. netlify.com öffnen → **Sign up** → **Sign up with GitHub**.
-2. Bei GitHub bestätigen, dass Netlify euer Konto lesen darf.
+It also works without an organization: in the repository, **Settings → Collaborators → Add people** and invite Natalie. But then Oscar has to do Netlify step A2, because only the owner can give Netlify access.
 
-### A2. Seite mit GitHub verbinden
+After moving to an organization, the live preview’s address becomes `https://<organization>.github.io/entropy-website/`. Update it in `README.md`.
 
-1. Im Netlify-Dashboard **Add new project** → **Import an existing project** → **GitHub**.
-2. GitHub fragt, auf welche Repositories Netlify zugreifen darf. **Only select repositories** → `entropy-website` → **Install / Save**.
-3. Zurück bei Netlify `entropy-website` anklicken.
-4. Die Einstellungen sind schon ausgefüllt, sie kommen aus der Datei `netlify.toml`:
+---
+
+## Way A: Netlify
+
+Netlify renames menu items from time to time. If a name doesn’t match exactly, look for the closest one.
+
+### A1. Create an account
+
+1. Open netlify.com → **Sign up** → **Sign up with GitHub**.
+2. Confirm on GitHub that Netlify may read your account.
+
+### A2. Connect the site to GitHub
+
+1. In the Netlify dashboard: **Add new project** → **Import an existing project** → **GitHub**.
+2. GitHub asks which repositories Netlify may access. **Only select repositories** → `entropy-website` → **Install / Save**.
+3. Back on Netlify, click `entropy-website`.
+4. The settings are already filled in from the file `netlify.toml`:
    - Branch to deploy: `main`
    - Build command: `python3 build.py`
    - Publish directory: `dist`
 
-   Nichts ändern, **Deploy** klicken.
-5. Nach etwa einer Minute ist die Seite unter einer Adresse wie `https://irgendein-name.netlify.app` online. Unter **Project configuration → Change project name** könnt ihr sie zum Beispiel in `entropy.netlify.app` ändern.
+   Change nothing, click **Deploy**.
+5. After about a minute the site is online at an address like `https://some-name.netlify.app`. Under **Project configuration → Change project name** you can change it, for example to `entropy.netlify.app`.
 
-### A3. Anfrageformular einschalten
+### A3. Turn on the request form
 
-1. Im Projekt links **Forms** → **Enable form detection**.
-2. Links **Deploys** → **Trigger deploy** → **Deploy project**. Erst dieser neue Deploy erkennt das Formular.
-3. Danach steht unter **Forms** ein Formular namens **request**.
+1. In the project, on the left, **Forms** → **Enable form detection**.
+2. On the left, **Deploys** → **Trigger deploy** → **Deploy project**. Only this new deploy detects the form.
+3. Afterwards **Forms** lists a form called **request**.
 
-### A4. Benachrichtigung per E-Mail
+### A4. Get new requests by email
 
 1. **Project configuration → Notifications → Emails and webhooks → Form submission notifications** → **Add notification** → **Email notification**.
-2. Form: **request**. E-Mail: die Adresse, an die neue Anfragen gehen sollen.
+2. Form: **request**. Email: the address new requests should go to.
 3. **Save**.
 
-**Test:** Die Netlify-Adresse öffnen, eine Testanfrage senden. Sie muss unter **Forms → request** erscheinen und per E-Mail ankommen. Spam fängt ein unsichtbares Feld ab. Was trotzdem durchrutscht, landet unter **Forms → Spam**.
+**Test:** Open the Netlify address and send a test request. It must appear under **Forms → request** and arrive by email. An invisible field catches spam bots. Anything that still gets through ends up under **Forms → Spam**.
 
-### A5. Eigene Domain verbinden
+### A5. Connect your own domain
 
-1. **Domain management** → **Add a domain** → eure Domain eingeben, zum Beispiel `entropy.de` → **Verify** → **Add domain**.
-2. Netlify zeigt jetzt, was bei eurem Domain-Anbieter einzutragen ist. Zwei Möglichkeiten:
-   - **Einfach:** Netlify übernimmt die Domain („Set up Netlify DNS“). Netlify nennt vier Nameserver. Diese beim Domain-Anbieter unter „Nameserver ändern“ eintragen. Achtung, falls über die Domain E-Mails laufen: Dann müssen die MX-Einträge vorher bei Netlify DNS angelegt werden. Sonst lieber die zweite Möglichkeit.
-   - **Behutsam:** Beim Domain-Anbieter nur zwei DNS-Einträge ändern, E-Mail bleibt unberührt:
-     - `A`-Eintrag für die Domain selbst (`@`) → die IP, die Netlify anzeigt
-     - `CNAME`-Eintrag für `www` → eure `….netlify.app`-Adresse
-3. Warten. Das dauert meist Minuten, selten bis zu 24 Stunden. Netlify richtet HTTPS danach von selbst ein. Unter **Domain management → HTTPS** muss am Ende „Your site has HTTPS enabled“ stehen.
+1. **Domain management** → **Add a domain** → enter your domain, for example `entropy.de` → **Verify** → **Add domain**.
+2. Netlify now shows what to set up at your domain provider. Two options:
+   - **Simple:** Netlify takes over the domain (“Set up Netlify DNS”). Netlify lists four name servers; enter them at your domain provider under “change name servers”. Careful if the domain is used for email: then the MX records have to be created in Netlify DNS first. Otherwise, prefer the second option.
+   - **Careful:** Change only two DNS records at your domain provider; email stays untouched:
+     - `A` record for the domain itself (`@`) → the IP address Netlify shows
+     - `CNAME` record for `www` → your `….netlify.app` address
+3. Wait. This usually takes minutes, rarely up to 24 hours. Netlify then sets up HTTPS by itself. Under **Domain management → HTTPS** it should finally say “Your site has HTTPS enabled”.
 
-### A6. Fertig: prüfen
+### A6. Done: check it
 
-- Die Seite auf dem Handy und am Laptop öffnen, einmal durchscrollen, die Sprache wechseln.
-- Ganz unten im Live-Audit muss „0 Tracker · 0 Cookies · 0 externe Anfragen“ stehen.
-- Optional: die Domain bei securityheaders.com prüfen. Erwartet wird die Bestnote.
+- Open the site on a phone and on a laptop, scroll through once, switch the language.
+- At the very bottom, the live audit must say “0 trackers · 0 cookies · 0 external requests”.
+- Optional: check the domain on securityheaders.com. The top grade is expected.
 
-**Ab jetzt:** Jede Änderung, die auf GitHub in `main` landet, ist nach etwa einer Minute live.
+**From now on:** every change that lands in `main` on GitHub is live after about a minute.
 
 ---
 
-## Weg B: Bestehender Hoster
+## Way B: existing host
 
-### B1. Dateien holen
+### B1. Get the files
 
-1. Auf GitHub im Repository oben **Code** → **Download ZIP**.
-2. Die ZIP entpacken und den Ordner **`dist`** öffnen. Darin liegen:
+1. On GitHub, in the repository: **Code** → **Download ZIP**.
+2. Unzip it and open the **`dist`** folder. It contains:
    `index.html`, `404.html`, `.htaccess`, `_headers`, `robots.txt`, `apple-touch-icon.png`
 
-   `.htaccess` ist eine versteckte Datei. Auf dem Mac im Finder mit **⌘ + ⇧ + .** sichtbar machen.
+   `.htaccess` is a hidden file. On a Mac, press **⌘ + ⇧ + .** in Finder to show it.
 
-### B2. Hochladen
+### B2. Upload
 
-1. Beim Hoster einloggen und den **Dateimanager** öffnen, oder per FTP mit FileZilla verbinden. Die Zugangsdaten stehen im Kundenmenü des Hosters.
-2. In den Ordner wechseln, auf den die Domain zeigt. Meist heißt er `htdocs`, `public_html` oder trägt den Namen der Domain.
-3. Alle Dateien aus `dist` dort hineinladen, auch `.htaccess`. Eine vorhandene `index.html` wird ersetzt. Vorher sichern, falls ihr sie noch braucht.
+1. Log in at your host and open the **file manager**, or connect via FTP with FileZilla. The login details are in your host’s customer area.
+2. Go to the folder the domain points to. It is usually called `htdocs` or `public_html`, or carries the domain’s name.
+3. Upload all files from `dist` into it, including `.htaccess`. An existing `index.html` gets replaced, so back it up first if you still need it.
 
-### B3. HTTPS einschalten
+### B3. Turn on HTTPS
 
-Im Kundenmenü des Hosters das SSL-Zertifikat für die Domain aktivieren. Bei vielen Hostern heißt das „SSL“ oder „Let’s Encrypt“, dazu die Option „HTTPS erzwingen“.
+In your host’s customer area, activate the SSL certificate for the domain. Many hosts call it “SSL” or “Let’s Encrypt”, with an option like “force HTTPS”.
 
-### B4. Prüfen
+### B4. Check it
 
-Wie in A6. Die Sicherheits-Header kommen hier aus der `.htaccess`.
+As in A6. The security headers come from `.htaccess` here.
 
-**Wichtig bei Weg B:** Das Anfrageformular braucht einen Empfänger. Beim normalen Webspace zeigt es nach dem Absenden eine Fehlermeldung. Entweder Weg A nehmen, oder mit `python3 build.py --form https://…` einen eigenen Formular-Endpunkt eintragen, siehe `README.md`.
+**Important for Way B:** the request form needs a receiver. On plain web space it shows an error message after sending. Either use Way A, or set your own form endpoint with `python3 build.py --form https://…`, see `README.md`.
 
-**Updates bei Weg B:** Nach jeder Änderung den `dist`-Ordner erneut hochladen.
+**Updates with Way B:** upload the `dist` folder again after every change.
 
 ---
 
-## Wenn etwas nicht klappt
+## If something doesn’t work
 
-| Problem | Lösung |
+| Problem | Fix |
 | --- | --- |
-| Die Seite ist schwarz oder ohne Schrift | `dist/index.html` wurde von Hand geändert. Neu bauen mit `python3 build.py` oder die Datei neu von GitHub laden |
-| Das Formular zeigt „Das hat nicht geklappt“ | Bei Netlify: A3 wiederholen, danach neu deployen. Bei Weg B: siehe den Hinweis oben |
-| Die Domain zeigt noch die alte Seite | DNS braucht Zeit. Nach ein paar Stunden neu versuchen, den Browser-Cache leeren |
-| Der GitHub-Check ist rot („dist/ is out of date“) | Jemand hat `src/` geändert, aber nicht neu gebaut. `python3 build.py` ausführen, `dist/` committen |
+| The page is black or has no fonts | `dist/index.html` was edited by hand. Rebuild with `python3 build.py`, or download the file from GitHub again |
+| The form says “That didn’t go through” | On Netlify: repeat A3, then deploy again. On Way B: see the note above |
+| The domain still shows the old site | DNS takes time. Try again in a few hours and clear the browser cache |
+| The GitHub check is red (“dist/ is out of date”) | Someone changed `src/` without rebuilding. Run `python3 build.py`, commit `dist/` |

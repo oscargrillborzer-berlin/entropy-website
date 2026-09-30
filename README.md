@@ -1,88 +1,88 @@
 # Entropy · Website
 
-Die Website von Entropy: Red Teaming für LLM-Anwendungen, Englisch und Deutsch.
+The website of Entropy: red teaming for LLM applications, in English and German.
 
-**Live-Vorschau:** https://oscargrillborzer-berlin.github.io/entropy-website/
+**Live preview:** https://oscargrillborzer-berlin.github.io/entropy-website/
 
-**Live gehen:** Schritt für Schritt in [docs/LAUNCH.md](docs/LAUNCH.md)
+**Going live:** step by step in [docs/LAUNCH.md](docs/LAUNCH.md)
 
-Die Seite ist eine einzige, eigenständige HTML-Datei. Schriften, Fotos und Code sind eingebettet: Sie lädt nichts von fremden Servern, setzt keine Cookies und trackt nicht. Eine strenge Content Security Policy lässt nur genau den eigenen Code laufen. Im Repository liegen keine Passwörter, API-Schlüssel oder Zugangsdaten, und die Seite braucht auch keine.
+The site is a single, self-contained HTML page. Fonts, photos and code are built in: it loads nothing from other servers, sets no cookies and does no tracking. A strict Content Security Policy lets only its own code run. The repository contains no passwords, API keys or credentials, and the site needs none.
 
-## Aufbau
+## Layout
 
 ```
 src/
-  index.html        Gerüst der Seite: Kopf, Abschnitte, Formular (englische Standardtexte)
-  styles.css        Das gesamte Design
-  js/               Der Code, ein Teil pro Aufgabe, in dieser Reihenfolge:
-    core.js           Einstellungen und kleine Helfer
-    mark.js           Logo und Wasserzeichen
-    copy.js           ALLE TEXTE, Englisch und Deutsch  ← hier Texte ändern
-    i18n.js           Sprachwechsel
+  index.html        Page skeleton: head, sections, request form (English default texts)
+  styles.css        The whole design
+  js/               The code, one file per job, in this order:
+    core.js           Settings and small helpers
+    mark.js           Logo and watermarks
+    copy.js           ALL TEXTS, English and German  ← change texts here
+    i18n.js           Language switch
     icons.js          Icons
-    board.js          Das Schachbrett und die Partie
-    dial.js           Der Kompass mit den acht Angriffsrichtungen
-    story.js          Scrollen → Spielzug
-    status.js         Statusleiste unten, Schritt-Anzeige
-    form.js           Anfrageformular
-    audit.js          Das Live-Audit im Footer
-    sheets.js         Impressum, Datenschutz, Schwachstelle melden
-    keys.js           Tastenkürzel
-    main.js           Start und Animationsschleife
-  404.html          Fehlerseite
-  assets/           Schriften (mit Lizenz), Teamfotos, Logo-Form, App-Icon
-build.py            Baut aus src/ die fertige Seite nach dist/
-dist/               DIE FERTIGE SEITE ZUM HOCHLADEN. Nie von Hand ändern
-docs/LAUNCH.md      Anleitung: Website live schalten
+    board.js          The chessboard and the game
+    dial.js           The compass with the eight directions of attack
+    story.js          Scrolling → chess moves
+    status.js         Status line at the bottom, step counter
+    form.js           Request form
+    audit.js          The live audit in the footer
+    sheets.js         Legal notice, privacy, vulnerability reports
+    keys.js           Keyboard shortcuts
+    main.js           Start-up and animation loop
+  404.html          Not-found page
+  assets/           Fonts (with licence), team photos, logo shape, app icon
+build.py            Builds the finished site from src/ into dist/
+dist/               THE FINISHED SITE, READY TO UPLOAD. Never edit by hand
+docs/LAUNCH.md      Guide: taking the site live
 ```
 
-## Texte ändern
+## Changing texts
 
-1. `src/js/copy.js` öffnen. Jeder Text steht dort zweimal: erst Englisch, dann Deutsch.
+1. Open `src/js/copy.js`. Every text appears twice: English first, then German.
    ```js
    'hero.sub': [
      'We attack your AI application the way a real attacker would, …',
      'Wir greifen Ihre KI-Anwendung so an, wie es ein echter Angreifer tun würde, …',
    ],
    ```
-2. Beide Zeilen ändern. Anführungszeichen im Text als typografische Zeichen schreiben (’ „ “), nicht als `'`.
-3. Seite bauen und prüfen:
+2. Change both lines. Write quotation marks inside a text as typographic characters (’ “ ” „), not as `'`.
+3. Build the site and check it:
    ```bash
    python3 build.py
    ```
-   Es braucht nur Python 3, keine weiteren Pakete. Dann `dist/index.html` im Browser öffnen.
-4. `src/` und `dist/` zusammen committen und pushen.
+   Only Python 3 is needed, no other packages. Then open `dist/index.html` in a browser.
+4. Commit and push `src/` and `dist/` together.
 
-Warum nicht direkt `dist/index.html` bearbeiten? Die Sicherheitsrichtlinie enthält einen Fingerabdruck (Hash) des Codes. Jede Änderung von Hand bricht ihn, und der Browser blockiert dann die Seite. `build.py` berechnet ihn bei jedem Bau neu.
+Why not edit `dist/index.html` directly? The security policy contains a fingerprint (hash) of the code. Any change by hand breaks it, and the browser then blocks the page. `build.py` recalculates it on every build.
 
-## Automatische Prüfungen
+## Automatic checks
 
-Bei jedem Push und jedem Pull Request prüft GitHub:
+On every push and every pull request, GitHub checks:
 
-- ob `dist/` genau das ist, was `src/` ergibt (sonst schlägt der Check fehl),
-- ob der Code der Seite fehlerfrei geparst wird.
+- that `dist/` is exactly what `src/` builds (otherwise the check fails),
+- that the page's code parses without errors.
 
-Danach baut GitHub die Live-Vorschau neu. Dependabot schlägt einmal im Monat Updates für die GitHub Actions vor. GitHub Secret Scanning blockiert Pushes, die aussehen, als enthielten sie Passwörter oder Schlüssel.
+Then GitHub rebuilds the live preview. Once a month Dependabot proposes updates for the GitHub Actions. GitHub secret scanning blocks any push that looks like it contains a password or key.
 
-## Build-Optionen
+## Build options
 
-| Befehl | Ergebnis |
+| Command | Result |
 | --- | --- |
-| `python3 build.py` | Produktion nach `dist/`. Das Formular sendet an `/` (Netlify Forms) |
-| `python3 build.py --form https://…` | Formular sendet an einen eigenen Endpunkt, der in der Sicherheitsrichtlinie freigegeben wird |
-| `python3 build.py --form none` | Formular im Prototyp-Modus, sendet nichts |
-| `python3 build.py --base /pfad/` | Für eine Seite, die nicht direkt unter der Domain liegt |
-| `python3 build.py --out ordner` | Anderer Ausgabeordner (nur innerhalb des Repositorys) |
+| `python3 build.py` | Production build into `dist/`. The form posts to `/` (Netlify Forms) |
+| `python3 build.py --form https://…` | The form posts to your own endpoint, which is allowed in the security policy |
+| `python3 build.py --form none` | Form in prototype mode, sends nothing |
+| `python3 build.py --base /path/` | For a site that is not served from the root of the domain |
+| `python3 build.py --out folder` | Another output folder (inside the repository only) |
 
-In `dist/` liegen die Sicherheits-Header zweimal: als `_headers` für Netlify und Cloudflare Pages und als `.htaccess` für klassische Hoster wie IONOS, Strato oder All-Inkl.
+`dist/` carries the security headers twice: as `_headers` for Netlify and Cloudflare Pages, and as `.htaccess` for classic hosts such as IONOS, Strato or All-Inkl.
 
-## Offen
+## Still open
 
-- Impressum: vollständige Anschrift ergänzen, sobald sie feststeht (Pflicht nach § 5 DDG). Der Text steht in `src/js/copy.js` unter `sh.legal`.
-- Vorschaubild für LinkedIn und WhatsApp, sobald die Domain feststeht.
+- Legal notice: add the full postal address once it is fixed (required by § 5 DDG in Germany). The text is in `src/js/copy.js` under `sh.legal`.
+- Preview image for LinkedIn and WhatsApp, once the domain is fixed.
 
-## Sicherheit und Lizenzen
+## Security and licences
 
-Schwachstellen bitte vertraulich melden, siehe [SECURITY.md](SECURITY.md).
+Please report vulnerabilities privately, see [SECURITY.md](SECURITY.md).
 
-Host Grotesk und JetBrains Mono stehen unter der SIL Open Font License 1.1, siehe `src/assets/fonts/`. Alles andere © Entropy, alle Rechte vorbehalten.
+Host Grotesk and JetBrains Mono are licensed under the SIL Open Font License 1.1, see `src/assets/fonts/`. Everything else © Entropy, all rights reserved.
