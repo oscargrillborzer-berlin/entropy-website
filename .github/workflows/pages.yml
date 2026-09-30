@@ -42,19 +42,20 @@ jobs:
           node --check /tmp/page.js
 
       # The public preview: served under /<repo>/, and the form sends nothing (GitHub Pages cannot receive it).
+      # On a free plan GitHub Pages only exists for public repositories, so a private repository is only checked.
       - name: Build the preview
         run: python3 build.py --out _site --base "/${{ github.event.repository.name }}/" --form none
 
-      - if: github.event_name != 'pull_request'
+      - if: github.event_name != 'pull_request' && !github.event.repository.private
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
-      - if: github.event_name != 'pull_request'
+      - if: github.event_name != 'pull_request' && !github.event.repository.private
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _site
 
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && !github.event.repository.private
     needs: check
     runs-on: ubuntu-latest
     timeout-minutes: 5
