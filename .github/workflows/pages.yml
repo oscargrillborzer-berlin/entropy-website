@@ -1,0 +1,46 @@
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # dist/ is what gets uploaded to the live site, so it has to match src/.
+      - name: Check that dist/ is built from the current src/
+        run: |
+          python3 build.py
+          git diff --exit-code -- dist || { echo "::error::dist/ is out of date. Run python3 build.py and commit dist/."; exit 1; }
+
+      # The public preview: served under /<repo>/, and the form sends nothing (GitHub Pages cannot receive it).
+      - name: Build the preview
+        run: python3 build.py --out _site --base "/${{ github.event.repository.name }}/" --form none
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,3 @@
+# dist/ is committed ready to serve, so Netlify only publishes it; there is nothing to build.
+[build]
+  publish = "dist"
