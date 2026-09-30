@@ -1,3 +1,5 @@
-# dist/ is committed ready to serve, so Netlify only publishes it; there is nothing to build.
+# Netlify builds the site from src/ on every deploy (Python 3 is in Netlify's build image)
+# and publishes dist/. The security headers come from dist/_headers.
 [build]
+  command = "python3 build.py"
   publish = "dist"

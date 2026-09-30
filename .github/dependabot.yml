@@ -1,0 +1,8 @@
+# The site has no packages. The only third-party code is the GitHub Actions in the workflow;
+# Dependabot proposes updates to their pinned commits once a month.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

@@ -3,44 +3,66 @@ name: Pages
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+# Nothing by default; each job asks for exactly what it needs.
+permissions: {}
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v7
+      # Actions are pinned to a commit, not to a tag that could be moved. Dependabot keeps them current.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      # dist/ is what gets uploaded to the live site, so it has to match src/.
-      - name: Check that dist/ is built from the current src/
+      # dist/ is what goes live, so it has to be exactly what src/ builds, new files included.
+      - name: dist/ is built from the current src/
         run: |
           python3 build.py
-          git diff --exit-code -- dist || { echo "::error::dist/ is out of date. Run python3 build.py and commit dist/."; exit 1; }
+          if [ -n "$(git status --porcelain -- dist)" ]; then
+            git status --short -- dist
+            echo "::error::dist/ is out of date. Run python3 build.py and commit dist/."
+            exit 1
+          fi
+
+      - name: The page script parses
+        run: |
+          python3 -c "s = open('dist/index.html').read(); open('/tmp/page.js', 'w').write(s[s.index('<script>') + 8:s.index('</script>')])"
+          node --check /tmp/page.js
 
       # The public preview: served under /<repo>/, and the form sends nothing (GitHub Pages cannot receive it).
       - name: Build the preview
         run: python3 build.py --out _site --base "/${{ github.event.repository.name }}/" --form none
 
-      - uses: actions/configure-pages@v6
-      - uses: actions/upload-pages-artifact@v5
+      - if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _site
 
   deploy:
-    needs: build
+    if: github.event_name != 'pull_request'
+    needs: check
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
