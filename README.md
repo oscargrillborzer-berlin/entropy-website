@@ -85,4 +85,4 @@ Then GitHub rebuilds the live preview. Once a month Dependabot proposes updates 
 
 Please report vulnerabilities privately, see [SECURITY.md](SECURITY.md).
 
-Host Grotesk and JetBrains Mono are licensed under the SIL Open Font License 1.1, see `src/assets/fonts/`. Everything else © Entropy, all rights reserved.
+Everything in this repository is © Entropy, all rights reserved, see [LICENSE](LICENSE). The exception are the fonts Host Grotesk and JetBrains Mono, which are licensed under the SIL Open Font License 1.1, see `src/assets/fonts/`.
