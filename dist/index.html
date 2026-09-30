@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-q73dsnqNVPgj3xgyYG/cIGL+hErwX6Yx0i3uxYxrs7w='; style-src 'sha256-eVdMmIpwkbMmzYVeikZHc+f1dmJGdTdQIqtYWW8cBRI='; img-src 'self' data:; font-src data:; connect-src 'self'; form-action 'self'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-btCrzmkLgAmd9g0TF2lkBFj9qZ6E9DEptby9qjJbNSU='; style-src 'sha256-aWSiMSl1nyTeYoOjnmc/J/KaksZeHseBDguI4iOgTdw='; img-src 'self' data:; font-src data:; connect-src 'self'; form-action 'self'; base-uri 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <title>Entropy · Bulletproofing AI</title>
@@ -140,9 +140,10 @@
   .pin { position: sticky; top: 0; height: calc(100svh - var(--status-h)); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
   .pin .head { padding-block: 34px 22px; border-bottom: 1px solid var(--line); }
   .story-body { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; min-height: 0; }
-  .steps { grid-column: 1 / span 4; list-style: none; margin: 0; padding: 0; display: grid; align-content: center; }
+  .steps { grid-column: 1 / span 4; list-style: none; margin: 0; padding: 0; display: grid; align-content: safe center; min-height: 0; overflow: hidden; }
   .steps li + li { border-top: 1px solid var(--line); }
   .steps button { width: 100%; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); padding: 18px 0; text-align: left; background: none; border: 0; cursor: pointer; }
+  .steps button:focus-visible { outline-offset: -2px; }
   .steps .idx { font-family: var(--mono); font-size: 11px; color: var(--fg-3); padding-top: 4px; transition: color .3s; }
   .steps .st-title { font-size: 1.05rem; font-weight: 500; letter-spacing: -.01em; color: var(--fg-3); transition: color .3s; }
   .steps .st-body { grid-column: 2; display: grid; grid-template-rows: 0fr; transition: grid-template-rows .5s var(--ease); }
@@ -347,9 +348,15 @@
   }
   @keyframes sheet-in { from { opacity: 0; transform: translateY(10px); } }
 
-  /* ---- page progress, on the top edge of the status line ---- */
-  .progress { position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--fg); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
 
+  /* short laptop screens: a tighter story, so the open step never runs into the legend */
+  @media (min-width: 1100px) and (max-height: 800px) {
+    .pin .head { padding-block: 22px 14px; }
+    .pin h2 { font-size: clamp(1.6rem, 2.6vw, 2.4rem); }
+    .steps button { padding: 12px 0; }
+    .steps .st-body > span { gap: 8px; }
+    .steps .map:first-child { padding-top: 8px; }
+  }
   @media (max-width: 1099px) {
     .nav { display: none; }
     .panel-wrap { grid-column: 6 / span 7; }
@@ -357,6 +364,19 @@
     .audit { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .audit > div:nth-child(4) { padding-left: 0; border-left: 0; }
     .audit > div:nth-child(n + 4) { border-top: 1px solid var(--line); }
+    .story-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+    .story-visual { grid-column: 1; grid-row: 1; }
+    .steps { grid-column: 1; grid-row: 2; grid-template-areas: "step"; align-content: start; border-top: 1px solid var(--line); }
+    .steps li { grid-area: step; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s linear .3s; }
+    .steps li.current { opacity: 1; visibility: visible; transition: opacity .3s ease .05s, visibility 0s; }
+    .steps li + li { border-top: 0; }
+    .steps .st-body { grid-template-rows: 1fr; transition: none; }
+    .steps button { padding: 14px 0 12px; }
+    .steps .map-v { max-width: 60ch; }
+    .story-foot { gap: 10px 16px; padding-block: 10px 12px; }
+    .story-foot .rail { order: -1; flex: 1 0 100%; }
+    .story-foot .rail i { height: 3px; }
+    .step-count { margin-left: auto; }
   }
   @media (max-width: 859px) {
     .hero-grid { min-height: 0; grid-template-columns: minmax(0, 1fr); padding-top: 72px; }
@@ -377,19 +397,7 @@
     .pin .head { padding-block: 18px 14px; }
     .pin .head > p { display: none; }
     .pin h2 { font-size: 1.45rem; }
-    .story-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
-    .story-visual { grid-column: 1; grid-row: 1; }
-    .steps { grid-column: 1; grid-row: 2; grid-template-areas: "step"; align-content: start; border-top: 1px solid var(--line); }
-    .steps li { grid-area: step; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s linear .3s; }
-    .steps li.current { opacity: 1; visibility: visible; transition: opacity .3s ease .05s, visibility 0s; }
-    .steps li + li { border-top: 0; }
-    .steps .st-body { grid-template-rows: 1fr; transition: none; }
-    .steps button { padding: 14px 0 12px; }
     .legend .opt { display: none; }
-    .story-foot { gap: 10px 16px; padding-block: 10px 12px; }
-    .story-foot .rail { order: -1; flex: 1 0 100%; }
-    .story-foot .rail i { height: 3px; }
-    .step-count { margin-left: auto; }
     .sheet-head { padding-left: 20px; }
     .sheet-body { padding: 22px 20px 28px; }
     .contact-in { grid-template-columns: minmax(0, 1fr); row-gap: 48px; padding-block: 12vh 10vh; }
@@ -697,7 +705,6 @@
 </footer>
 
 <div class="status">
-  <i class="progress" id="st-progress" aria-hidden="true"></i>
   <div class="status-in wrap">
     <span class="brand"><span data-mark></span>Entropy</span>
     <span class="path" id="st-path">~/</span>
@@ -1587,8 +1594,8 @@
   const SECTIONS = [['~/', heroEl], ['~/how', storyEl], ['~/why-now', $('#why')], ['~/findings', $('#findings')],
                     ['~/work-with-us', $('#offer')], ['~/team', $('#team')], ['~/contact', $('#contact')], ['~/audit', $('#audit')]];
   const pathEl = $('#st-path'), midEl = $('#st-mid'), pctEl = $('#st-pct');
-  const progressEl = $('#st-progress'), stepNow = $('#step-now');
-  const ui = { step: -1, path: '', mid: '', pct: '', rail: '', bar: '' };
+  const stepNow = $('#step-now');
+  const ui = { step: -1, path: '', mid: '', pct: '', rail: '' };
   listeners.push(() => { ui.mid = null; });
   let currentStep = 0;
   function updateUI(p, inStory) {
@@ -1612,8 +1619,6 @@
     const max = document.documentElement.scrollHeight - vh;
     const pct = `${pad(max > 0 ? Math.round((scrollY / max) * 100) : 0, 3)}%`;
     if (pct !== ui.pct) { ui.pct = pct; pctEl.textContent = pct; }
-    const bar = (max > 0 ? clamp01(scrollY / max) : 0).toFixed(3);
-    if (bar !== ui.bar) { ui.bar = bar; progressEl.style.transform = `scaleX(${bar})`; }
   }
 
   // Blocks rise into place once, as they reach the reader. They are visible before that, only lower and dimmer.
